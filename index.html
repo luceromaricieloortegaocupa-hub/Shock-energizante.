@@ -42,6 +42,34 @@
         .neon-text-amber {
             text-shadow: 0 0 8px rgba(217, 119, 6, 0.8), 0 0 20px rgba(217, 119, 6, 0.4);
         }
+        
+        /* Animación para la caída e interacción de los ingredientes */
+        @keyframes fallAndSway {
+            0% { transform: translateY(-5vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(105vh) translateX(25px) rotate(360deg); opacity: 0; }
+        }
+        
+        .organic-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            animation: fallAndSway linear infinite;
+        }
+        
+        /* Estilo base para las Cáscaras de Café */
+        .peel-particle {
+            border-radius: 50% 20% 50% 20%;
+            box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6);
+        }
+        
+        /* Estilo base para las Hojas de Guayusa */
+        .leaf-particle {
+            border-radius: 70% 10% 70% 10%;
+            box-shadow: inset -1px -1px 3px rgba(0,0,0,0.4);
+        }
+
         /* Custom scrollbar para estética cyber */
         ::-webkit-scrollbar {
             width: 6px;
@@ -55,7 +83,10 @@
         }
     </style>
 </head>
-<body class="bg-shockDark text-white font-sans overflow-x-hidden">
+<body class="bg-shockDark text-white font-sans overflow-x-hidden relative">
+
+    <!-- Contenedor dinámico de ingredientes bio-ambientales -->
+    <div id="organic-container" class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
 
     <!-- ========================================== -->
     <!-- 1. PANTALLA DE CARGA (Splash Screen) -->
@@ -75,7 +106,7 @@
         </button>
     </div>
 
-    <!-- Contenedor Principal (Oculto al inicio para dar paso al Splash Screen) -->
+    <!-- Contenedor Principal -->
     <div id="main-content" class="opacity-0 transition-opacity duration-1000">
 
         <!-- Header / Navegación Superior -->
@@ -111,7 +142,7 @@
                 <!-- Efecto de Aura Eléctrica tras la botella -->
                 <div class="absolute w-48 h-80 bg-shockAmber/20 rounded-full filter blur-3xl mix-blend-screen animate-pulse"></div>
                 
-                <!-- Modelo de la Botella (Hecho con SVG interactivo y sombras realistas de Vidrio Ámbar) -->
+                <!-- Modelo de la Botella -->
                 <div id="bottle" class="w-36 h-[380px] relative transition-transform duration-200 ease-out flex flex-col justify-end items-center">
                     
                     <!-- Brillo de energía del rayo -->
@@ -123,31 +154,17 @@
 
                     <!-- El Cuerpo de la Botella (Silueta de Vidrio Ámbar) -->
                     <svg class="w-full h-full drop-shadow-[0_15px_30px_rgba(217,119,6,0.3)]" viewBox="0 0 100 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Tapa Negra Metálica -->
                         <path d="M38 10C38 8.89543 38.8954 8 40 8H60C61.1046 8 62 8.89543 62 10V18H38V10Z" fill="#111111"/>
                         <path d="M38 14H62" stroke="#222222" stroke-width="2"/>
-                        
-                        <!-- Cuello de Botella Ámbar -->
                         <path d="M38 18H62V35C62 50 78 55 78 75V230C78 241.046 69.0457 250 58 250H42C30.9543 250 22 241.046 22 230V75C22 55 38 50 38 35V18Z" fill="#3d1b04" fill-opacity="0.95" stroke="#632e0b" stroke-width="2"/>
-                        
-                        <!-- Líquido y Brillo Interno Ámbar -->
                         <path d="M26 80C26 65 38 60 38 45V22H62V45C62 60 74 65 74 80V226C74 233.732 67.732 240 60 240H40C32.268 240 26 233.732 26 226V80Z" fill="url(#amber-glass-grad)"/>
-                        
-                        <!-- Etiqueta Negra de SHOCK -->
                         <path d="M22.5 100H77.5V180H22.5V100Z" fill="#080808"/>
-                        <!-- Rayo de la etiqueta (Verde Neón) -->
                         <path d="M52 110L42 145H51L50 170L60 135H51L52 110Z" fill="#00ff66"/>
-                        <!-- Texto SHOCK de la etiqueta -->
                         <text x="50" y="125" fill="#ffffff" font-family="monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="1">SHOCK</text>
-                        <!-- Texto San Ignacio -->
                         <text x="50" y="174" fill="#00ff66" font-family="sans-serif" font-weight="bold" font-size="4" text-anchor="middle" letter-spacing="0.5">SAN IGNACIO</text>
-                        
-                        <!-- Reflejo de luz lateral (Efecto de cristal 3D) -->
                         <path d="M30 75C30 75 35 68 38 50V22" stroke="#ffffff" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
                         <path d="M26 90V210C26 220 30 225 35 228" stroke="#ffffff" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round"/>
                         <path d="M74 90V210C74 220 70 225 65 228" stroke="#000000" stroke-opacity="0.4" stroke-width="2.5" stroke-linecap="round"/>
-
-                        <!-- Definición de gradientes -->
                         <defs>
                             <linearGradient id="amber-glass-grad" x1="0" y1="0" x2="1" y2="0">
                                 <stop offset="0%" stop-color="#241002"/>
@@ -161,47 +178,41 @@
                 </div>
             </div>
 
-            <!-- Mensaje interactivo del celular -->
+            <!-- Mensaje interactivo -->
             <p class="text-xs text-zinc-500 mb-6 flex items-center gap-2 z-10 bg-zinc-950/80 px-4 py-2 rounded-full border border-white/5">
                 <i data-lucide="smartphone" class="w-4 h-4 animate-bounce text-shockGreen"></i>
                 Arrastra o inclina tu celular para examinar la botella
             </p>
 
-            <!-- Botón de Acción Principal (Simulador de Filtro AR) -->
+            <!-- Botón de Acción Principal -->
             <div class="w-full max-w-sm px-6 z-10">
                 <button onclick="toggleARSimulation()" class="w-full bg-shockGreen text-black font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 hover:shadow-neon-green transition-all duration-300 transform hover:scale-105 active:scale-95 text-lg shadow-lg">
                     <i data-lucide="sparkles" class="w-6 h-6 fill-black"></i>
-                    PROBAR FILTRO EN VIVO
+                    PROBAR VISOR ECO-INTELLIGENT
                 </button>
                 <p class="text-center text-[10px] text-gray-500 mt-2">
-                    Simula la Realidad Aumentada de TikTok directamente desde aquí
+                    Simula la detección del envase ecológico en tiempo real
                 </p>
             </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- 3. SIMULADOR DE CÁMARA / REALIDAD AUMENTADA -->
+        <!-- 3. SIMULADOR DE CÁMARA / VISOR INTEGRADO -->
         <!-- ========================================== -->
         <div id="ar-modal" class="fixed inset-0 z-50 bg-black/95 hidden flex-col justify-between p-6">
-            <!-- HUD de Cámara de Filtro -->
             <div class="flex justify-between items-center w-full">
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 bg-red-600 rounded-full animate-ping"></div>
-                    <span class="text-xs font-bold tracking-widest uppercase">SHOCK LENS v1.0</span>
+                    <div class="w-3 h-3 bg-shockGreen rounded-full animate-ping"></div>
+                    <span class="text-xs font-bold tracking-widest uppercase text-shockGreen">SHOCK VISION SYSTEM</span>
                 </div>
                 <button onclick="toggleARSimulation()" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition">
                     <i data-lucide="x" class="w-6 h-6 text-white"></i>
                 </button>
             </div>
 
-            <!-- Pantalla / Feed de la cámara simulado -->
             <div class="relative flex-1 my-6 rounded-3xl overflow-hidden border border-shockGreen/40 bg-zinc-950 flex flex-col items-center justify-center">
-                <!-- Video de fondo alternativo o mensaje simulado -->
                 <video id="webcam" class="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none" autoplay playsinline muted></video>
-                
-                <!-- Máscara AR Simulada (Rayos eléctricos y aura flotando) -->
                 <div id="ar-filter-elements" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
-                    <!-- Marco HUD de escaneo -->
                     <div class="absolute inset-8 border border-white/10 rounded-2xl flex flex-col justify-between p-4">
                         <div class="flex justify-between">
                             <div class="w-4 h-4 border-t-2 border-l-2 border-shockGreen"></div>
@@ -212,30 +223,21 @@
                             <div class="w-4 h-4 border-b-2 border-r-2 border-shockGreen"></div>
                         </div>
                     </div>
-
-                    <!-- Rayos locos parpadeando -->
                     <svg class="w-56 h-56 text-shockGreen filter drop-shadow-[0_0_15px_#00ff66] animate-pulse" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                     </svg>
-                    
                     <p class="text-xs uppercase font-bold tracking-widest text-shockGreen neon-text-green mt-4 animate-bounce">
-                        RAYO ACTIVADO ⚡
+                        ENVASE DETECTADO ⚡
                     </p>
                 </div>
-
-                <!-- Botón simulador de captura -->
                 <div class="absolute bottom-6 flex flex-col items-center">
-                    <p class="text-[10px] text-gray-400 mb-2">Apunta a la botella de SHOCK o a tu rostro</p>
+                    <p class="text-[10px] text-gray-400 mb-2">Apunta a la botella de SHOCK para la demostración técnica</p>
                     <button onclick="triggerSnapEffect()" class="w-16 h-16 rounded-full border-4 border-white bg-shockGreen/20 flex items-center justify-center hover:bg-shockGreen/40 active:scale-90 transition-all"></button>
                 </div>
             </div>
 
-            <!-- Enlace alternativo para ir a apps reales -->
-            <div class="text-center flex flex-col gap-2">
-                <a href="https://www.tiktok.com" target="_blank" class="bg-zinc-900 border border-white/15 hover:border-shockGreen/50 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition">
-                    <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.09-1.5-.7-.52-1.27-1.2-1.68-1.97-.05 2.52-.02 5.04-.04 7.56-.03 2.85-.97 5.75-3.05 7.74-2.19 2.14-5.46 2.91-8.47 2.22-3.12-.66-5.89-2.92-6.9-5.91-.98-2.93-.41-6.38 1.52-8.79 1.96-2.48 5.2-3.64 8.35-3.03v4.03c-1.62-.43-3.41-.01-4.66 1.05-1.12.98-1.57 2.57-1.23 4.02.32 1.43 1.48 2.6 2.89 2.92 1.53.37 3.25-.13 4.13-1.45.64-.93.75-2.12.73-3.21-.02-3.83-.01-7.67-.01-11.51z"/></svg>
-                    PROBAR FILTRO EN TIKTOK REAL
-                </a>
+            <div class="text-center p-2 bg-zinc-900/50 rounded-xl border border-white/5">
+                <p class="text-[11px] text-gray-400">Interacción digital para la evaluación del modelo de negocio circular.</p>
             </div>
         </div>
 
@@ -244,17 +246,13 @@
         <!-- ========================================== -->
         <section class="py-20 px-6 max-w-4xl mx-auto border-t border-white/5 relative">
             <div class="absolute right-0 top-1/4 w-72 h-72 bg-shockGreen/5 rounded-full blur-[100px] pointer-events-none"></div>
-
             <div class="text-center mb-16">
                 <span class="text-xs uppercase tracking-[0.4em] text-shockGreen font-bold block mb-2">Ingredientes Científicamente Sinérgicos</span>
                 <h3 class="text-4xl font-extrabold italic">LA TRIPLE COHESIÓN DEL IMPACTO</h3>
                 <p class="text-gray-400 mt-2 max-w-md mx-auto">La potencia de la naturaleza de San Ignacio optimizada para el alto rendimiento sin químicos dañinos.</p>
             </div>
 
-            <!-- Cuadrícula de Ingredientes / Ciencia -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- Tarjeta 1: Guayusa -->
                 <div class="bg-shockGray p-6 rounded-2xl border border-white/5 hover:border-shockGreen/30 hover:shadow-neon-green transition-all duration-300 group">
                     <div class="w-12 h-12 bg-shockGreen/10 rounded-xl flex items-center justify-center text-shockGreen mb-6 group-hover:scale-110 transition-transform">
                         <i data-lucide="leaf" class="w-6 h-6"></i>
@@ -266,7 +264,6 @@
                     </p>
                 </div>
 
-                <!-- Tarjeta 2: Cáscara de Café -->
                 <div class="bg-shockGray p-6 rounded-2xl border border-white/5 hover:border-shockAmber/30 hover:shadow-neon-amber transition-all duration-300 group">
                     <div class="w-12 h-12 bg-shockAmber/10 rounded-xl flex items-center justify-center text-shockAmber mb-6 group-hover:scale-110 transition-transform">
                         <i data-lucide="coffee" class="w-6 h-6"></i>
@@ -278,34 +275,27 @@
                     </p>
                 </div>
 
-                <!-- Tarjeta 3: Taurina -->
                 <div class="bg-shockGray p-6 rounded-2xl border border-white/5 hover:border-shockGreen/30 hover:shadow-neon-green transition-all duration-300 group">
                     <div class="w-12 h-12 bg-shockGreen/10 rounded-xl flex items-center justify-center text-shockGreen mb-6 group-hover:scale-110 transition-transform">
                         <i data-lucide="zap" class="w-6 h-6"></i>
                     </div>
                     <h4 class="text-lg font-black tracking-wide text-white mb-2 uppercase">3. Taurina Activa</h4>
-                    <p class="text-xs text-shockGreen font-bold mb-4">DESEMPEÑO FÍSICO EXPLOSIVO</p>
                     <p class="text-sm text-gray-400 leading-relaxed">
                         Un aminoácido que optimiza la hidratación celular a nivel muscular y mejora la contracción durante esfuerzos físicos extremos. Energía líquida para superar tus límites.
                     </p>
                 </div>
-
             </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- 5. SECCIÓN: ECONOMÍA CIRCULAR / SAN IGNACIO -->
+        <!-- 5. SECCIÓN: ECONOMÍA CIRCULAR -->
         <!-- ========================================== -->
         <section class="py-20 px-6 bg-zinc-950 border-t border-white/5 relative">
             <div class="max-w-4xl mx-auto">
                 <div class="flex flex-col md:flex-row items-center gap-12">
-                    
-                    <!-- Lado izquierdo: Gráfico del Flujo Circular -->
                     <div class="w-full md:w-1/2 flex justify-center">
                         <div class="relative w-64 h-64 border-2 border-dashed border-shockGreen/20 rounded-full flex items-center justify-center p-8 animate-[spin_40s_linear_infinite]">
                             <div class="absolute inset-2 border border-shockAmber/20 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
-                            
-                            <!-- Iconos estáticos del ciclo dentro de la animación -->
                             <div class="absolute top-0 -translate-y-1/2 bg-shockDark border border-shockGreen p-3 rounded-full text-shockGreen">
                                 <i data-lucide="sprout" class="w-6 h-6"></i>
                             </div>
@@ -319,8 +309,6 @@
                                 <i data-lucide="recycle" class="w-6 h-6"></i>
                             </div>
                         </div>
-                        
-                        <!-- Texto Central Fijo -->
                         <div class="absolute w-40 h-40 flex flex-col items-center justify-center text-center">
                             <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">ECONOMÍA</span>
                             <span class="text-lg font-black text-shockGreen">CIRCULAR</span>
@@ -328,11 +316,9 @@
                         </div>
                     </div>
 
-                    <!-- Lado derecho: Explicación para el Jurado -->
                     <div class="w-full md:w-1/2">
                         <span class="text-xs uppercase tracking-[0.4em] text-shockAmber font-bold block mb-2">Impacto Real en San Ignacio</span>
                         <h3 class="text-4xl font-extrabold italic mb-6">REVALORIZACIÓN DEL DESECHO AGRÍCOLA</h3>
-                        
                         <div class="space-y-6">
                             <div class="flex gap-4">
                                 <div class="w-8 h-8 rounded-full bg-shockAmber/10 border border-shockAmber/30 flex items-center justify-center text-shockAmber shrink-0">1</div>
@@ -348,7 +334,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -358,18 +343,14 @@
         <!-- ========================================== -->
         <section class="py-20 px-6 max-w-4xl mx-auto border-t border-white/5 relative text-center">
             <div class="absolute left-0 bottom-1/4 w-72 h-72 bg-shockAmber/5 rounded-full blur-[100px] pointer-events-none"></div>
-
             <span class="text-xs uppercase tracking-[0.4em] text-shockGreen font-bold block mb-2">Activación Sensorial</span>
             <h3 class="text-4xl font-extrabold italic mb-4">SINTETIZADOR DE RITMOS: SHOCK BEATS</h3>
             <p class="text-gray-400 max-w-md mx-auto mb-10 text-sm">
                 Experimenta la energía de SHOCK a través del sonido. Activa las ondas sintetizadas generadas directamente por tu navegador.
             </p>
 
-            <!-- Sintetizador Cyber Board -->
             <div class="bg-shockGray p-8 rounded-3xl border border-white/10 max-w-md mx-auto shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-shockGreen via-shockAmber to-shockGreen"></div>
-                
-                <!-- Display del reproductor -->
                 <div class="bg-black/60 rounded-2xl p-4 border border-white/5 mb-6 text-left">
                     <div class="flex justify-between items-center mb-1">
                         <span id="synth-status" class="text-xs uppercase tracking-widest text-shockGreen animate-pulse font-mono">Apagado</span>
@@ -379,16 +360,14 @@
                     <p class="text-[10px] text-zinc-500 font-mono mt-1">SÍNTESIS ANALÓGICA POR WEB AUDIO API</p>
                 </div>
 
-                <!-- Botones de los modos de audio -->
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <button onclick="playSynthBeat('enfoque')" class="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl text-left hover:border-shockAmber hover:bg-shockAmber/5 transition-all group flex flex-col justify-between h-28">
                         <i data-lucide="brain" class="w-6 h-6 text-shockAmber group-hover:scale-110 transition-transform"></i>
                         <div>
-                            <span class="text-xs text-shockAmber font-bold uppercase block">120 BPM</span>
+                            <span class="text-xs text-shockAmber font-bold uppercase block">100 BPM</span>
                             <span class="text-sm font-extrabold text-white">MODO ENFOQUE</span>
                         </div>
                     </button>
-
                     <button onclick="playSynthBeat('entrenamiento')" class="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl text-left hover:border-shockGreen hover:bg-shockGreen/5 transition-all group flex flex-col justify-between h-28">
                         <i data-lucide="zap" class="w-6 h-6 text-shockGreen group-hover:scale-110 transition-transform"></i>
                         <div>
@@ -397,17 +376,13 @@
                         </div>
                     </button>
                 </div>
-
-                <!-- Botón de detención -->
                 <button onclick="stopSynthBeat()" class="w-full bg-zinc-950 border border-white/10 hover:border-red-600 hover:text-red-500 py-3 rounded-xl text-xs font-mono tracking-widest uppercase transition-all">
                     DETENER SÍNTESIS DE SONIDO
                 </button>
             </div>
         </section>
 
-        <!-- ========================================== -->
         <!-- FOOTER -->
-        <!-- ========================================== -->
         <footer class="py-12 border-t border-white/5 bg-zinc-950 px-6 text-center text-xs text-gray-600">
             <p class="mb-4">SHOCK es una marca registrada de Bio-Performance San Ignacio S.A.</p>
             <div class="flex justify-center gap-6 mb-4">
@@ -417,224 +392,150 @@
             </div>
             <p class="text-[10px] text-zinc-700">Diseñado con tecnología limpia, economía circular y respeto ecológico.</p>
         </footer>
-
     </div>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT: INTERACTIVIDAD Y AUDIO -->
-    <!-- ========================================== -->
+    <!-- JAVASCRIPT -->
     <script>
-        // Inicializar los iconos de Lucide al cargar la página
         window.onload = function() {
             lucide.createIcons();
+            generateOrganicParticles();
         };
 
-        // Quitar la pantalla de carga (Splash screen)
         function dismissSplash() {
             const splash = document.getElementById('splash-screen');
             const main = document.getElementById('main-content');
-            
-            // Animación de salida del splash
             splash.classList.add('opacity-0', 'scale-110', 'pointer-events-none');
-            setTimeout(() => {
-                splash.style.display = 'none';
-            }, 700);
-
-            // Animación de entrada de la web
+            setTimeout(() => { splash.style.display = 'none'; }, 700);
             main.classList.remove('opacity-0');
             main.classList.add('opacity-100');
         }
 
-        // ========================================================
-        // INTERACTIVIDAD DE LA BOTELLA (Rotación en Mobile & Desktop)
-        // ========================================================
+        function generateOrganicParticles() {
+            const container = document.getElementById('organic-container');
+            const totalParticles = 30;
+            for (let i = 0; i < totalParticles; i++) {
+                const item = document.createElement('div');
+                item.className = 'organic-particle';
+                const isLeaf = Math.random() > 0.5;
+                const baseSize = Math.random() * 12 + 8;
+                item.style.width = `${baseSize}px`;
+                item.style.height = isLeaf ? `${baseSize * 1.8}px` : `${baseSize * 1.3}px`;
+                
+                if (isLeaf) {
+                    item.classList.add('leaf-particle');
+                    const greenTone = Math.floor(Math.random() * 20) + 120;
+                    item.style.backgroundColor = `hsl(${greenTone}, 75%, ${Math.random() * 15 + 25}%)`;
+                } else {
+                    item.classList.add('peel-particle');
+                    const brownTone = Math.floor(Math.random() * 12) + 16;
+                    item.style.backgroundColor = `hsl(${brownTone}, 80%, ${Math.random() * 12 + 12}%)`;
+                }
+                item.style.left = `${Math.random() * 100}%`;
+                item.style.animationDuration = `${Math.random() * 7 + 7}s`;
+                item.style.animationDelay = `${Math.random() * -14}s`;
+                container.appendChild(item);
+            }
+        }
+
         const container = document.getElementById('bottle-container');
         const bottle = document.getElementById('bottle');
-
-        // Soporte para computadoras (Mousemove)
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left - (rect.width / 2);
             const y = e.clientY - rect.top - (rect.height / 2);
-            
-            // Limitar rotación para que no sea excesivo
-            const rotateX = -y / 10;
-            const rotateY = x / 10;
-            
-            bottle.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            bottle.style.transform = `rotateX(${-y / 10}deg) rotateY(${x / 10}deg) scale(1.05)`;
         });
-
         container.addEventListener('mouseleave', () => {
             bottle.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
         });
 
-        // Soporte para celulares (Acelerómetro / Orientación)
         if (window.DeviceOrientationEvent) {
             window.addEventListener('deviceorientation', (e) => {
-                // gamma es rotación de izquierda a derecha, beta de adelante hacia atrás
                 if (e.gamma !== null && e.beta !== null) {
-                    const rotateY = Math.min(Math.max(e.gamma / 2, -25), 25);
-                    const rotateX = Math.min(Math.max((e.beta - 60) / 2, -25), 25); // Ajustado para ángulo de uso cómodo
-                    bottle.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    bottle.style.transform = `rotateX(${Math.min(Math.max((e.beta - 60) / 2, -25), 25)}deg) rotateY(${Math.min(Math.max(e.gamma / 2, -25), 25)}deg)`;
                 }
             }, true);
         }
 
-        // ========================================================
-        // SIMULADOR DE CÁMARA (REALIDAD AUMENTADA NO-CODE)
-        // ========================================================
         let isARActive = false;
         let webcamStream = null;
-
         async function toggleARSimulation() {
             const arModal = document.getElementById('ar-modal');
             const video = document.getElementById('webcam');
             isARActive = !isARActive;
-
             if (isARActive) {
                 arModal.classList.remove('hidden');
                 arModal.classList.add('flex');
-                
-                // Intentar encender la webcam real del dispositivo para simular AR
                 try {
-                    webcamStream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { facingMode: "user" }, 
-                        audio: false 
-                    });
+                    webcamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
                     video.srcObject = webcamStream;
-                } catch (err) {
-                    console.log("Cámara real no disponible o denegada, se usará simulador visual.");
-                }
+                } catch (err) { console.log("Visor activo simulado."); }
             } else {
                 arModal.classList.add('hidden');
                 arModal.classList.remove('flex');
-                
-                // Apagar cámara al cerrar
-                if (webcamStream) {
-                    webcamStream.getTracks().forEach(track => track.stop());
-                    webcamStream = null;
-                }
+                if (webcamStream) { webcamStream.getTracks().forEach(track => track.stop()); webcamStream = null; }
                 video.srcObject = null;
             }
         }
 
-        // Simula captura de fotos con un destello blanco en la pantalla
         function triggerSnapEffect() {
             const flash = document.createElement('div');
             flash.className = 'fixed inset-0 bg-white z-[60] transition-opacity duration-300';
             document.body.appendChild(flash);
-            
-            setTimeout(() => {
-                flash.style.opacity = '0';
-                setTimeout(() => {
-                    flash.remove();
-                }, 300);
-            }, 50);
+            setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => { flash.remove(); }, 300); }, 50);
         }
 
-        // ========================================================
-        // SINTETIZADOR SENSORIAL (Generación real de sonidos)
-        // ========================================================
         let audioCtx = null;
         let synthInterval = null;
         let isSynthPlaying = false;
-
-        function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            return audioCtx;
-        }
+        function getAudioContext() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } return audioCtx; }
 
         function playSynthBeat(mode) {
             const ctx = getAudioContext();
-            
-            // Si ya está sonando, detener el ritmo anterior
-            if (isSynthPlaying) {
-                stopSynthBeat();
-            }
-
+            if (isSynthPlaying) { stopSynthBeat(); }
             isSynthPlaying = true;
-            
-            // Actualizar Display de la UI
             const status = document.getElementById('synth-status');
             const title = document.getElementById('synth-track-title');
-            
             status.textContent = "SINTETIZANDO EN VIVO";
-            status.className = "text-xs uppercase tracking-widest text-shockGreen animate-pulse font-mono";
-
             let tempo = 120;
-            let noteSequence = [110, 165, 110, 165]; // Frecuencias en Hz (Notas de Bajo)
-
-            if (mode === 'enfoque') {
-                title.textContent = "Lofi Cyber Focus";
-                tempo = 100;
-                noteSequence = [110, 130, 146, 165, 110, 130, 146, 165]; // Secuencia profunda
-            } else if (mode === 'entrenamiento') {
-                title.textContent = "Industrial Power Electro";
-                tempo = 140;
-                noteSequence = [82, 82, 123, 82, 98, 82, 110, 82]; // Secuencia enérgica
-            }
-
-            const stepDuration = 60 / tempo / 2; // Semitcheas
+            let noteSequence = [110, 165, 110, 165];
+            if (mode === 'enfoque') { title.textContent = "Lofi Cyber Focus"; tempo = 100; noteSequence = [110, 130, 146, 165, 110, 130, 146, 165]; }
+            else if (mode === 'entrenamiento') { title.textContent = "Industrial Power Electro"; tempo = 140; noteSequence = [82, 82, 123, 82, 98, 82, 110, 82]; }
+            const stepDuration = 60 / tempo / 2;
             let step = 0;
 
             synthInterval = setInterval(() => {
-                // 1. Generar onda del sintetizador de bajo
                 const osc = ctx.createOscillator();
                 const gainNode = ctx.createGain();
-                
                 osc.type = mode === 'enfoque' ? 'sine' : 'sawtooth';
                 osc.frequency.setValueAtTime(noteSequence[step % noteSequence.length], ctx.currentTime);
-                
-                // Filtro paso bajo para que se escuche rítmico y futurista
                 const filter = ctx.createBiquadFilter();
                 filter.type = 'lowpass';
                 filter.frequency.setValueAtTime(mode === 'enfoque' ? 300 : 700, ctx.currentTime);
-
                 gainNode.gain.setValueAtTime(0.15, ctx.currentTime);
-                // Decaimiento rápido del sonido para simular pulsaciones de bajo
                 gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + stepDuration - 0.05);
-
                 osc.connect(filter);
                 filter.connect(gainNode);
                 gainNode.connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + stepDuration);
 
-                osc.start();
-                osc.stop(ctx.currentTime + stepDuration);
-
-                // 2. Simular un platillo/hit de batería rítmico (White Noise sintético)
                 if (step % 2 === 1) {
                     const noiseOsc = ctx.createOscillator();
                     const noiseGain = ctx.createGain();
-                    
-                    noiseOsc.type = 'triangle';
-                    noiseOsc.frequency.setValueAtTime(8000, ctx.currentTime);
-                    
+                    noiseOsc.type = 'triangle'; noiseOsc.frequency.setValueAtTime(8000, ctx.currentTime);
                     noiseGain.gain.setValueAtTime(0.03, ctx.currentTime);
                     noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-                    
-                    noiseOsc.connect(noiseGain);
-                    noiseGain.connect(ctx.destination);
-                    
-                    noiseOsc.start();
-                    noiseOsc.stop(ctx.currentTime + 0.06);
+                    noiseOsc.connect(noiseGain); noiseGain.connect(ctx.destination);
+                    noiseOsc.start(); noiseOsc.stop(ctx.currentTime + 0.06);
                 }
-
                 step++;
             }, stepDuration * 1000);
         }
 
         function stopSynthBeat() {
-            if (synthInterval) {
-                clearInterval(synthInterval);
-                synthInterval = null;
-            }
+            if (synthInterval) { clearInterval(synthInterval); synthInterval = null; }
             isSynthPlaying = false;
-            
-            // Actualizar interfaz
             document.getElementById('synth-status').textContent = "Apagado";
-            document.getElementById('synth-status').className = "text-xs uppercase tracking-widest text-zinc-500 font-mono";
             document.getElementById('synth-track-title').textContent = "SELECCIONA MODO";
         }
     </script>
