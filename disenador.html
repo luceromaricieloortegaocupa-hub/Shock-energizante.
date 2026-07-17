@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOCK - Generador Oficial de Etiquetas y Flyers</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        shockGreen: '#00ff66',
+                        shockAmber: '#d97706',
+                        shockDark: '#080808',
+                        shockGray: '#151515',
+                        shockCard: '#1e1e1e',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons para iconos elegantes -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .neon-border-green {
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+            border-color: #00ff66;
+        }
+        .neon-border-amber {
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.4);
+            border-color: #d97706;
+        }
+        .printable-area {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-target, #print-target * {
+                visibility: visible;
+            }
+            #print-target {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-shockDark text-white font-sans overflow-x-hidden min-h-screen">
+
+    <!-- Encabezado de la App -->
+    <header class="bg-zinc-950/90 border-b border-white/10 py-4 px-6 fixed top-0 left-0 right-0 z-40 backdrop-blur-md flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <svg class="w-6 h-6 text-shockGreen" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <span class="font-black text-lg tracking-wider text-shockGreen">SHOCK STUDIO</span>
+        </div>
+        <span class="text-[10px] uppercase tracking-widest text-shockAmber border border-shockAmber/30 px-3 py-1 rounded-full bg-shockAmber/10 font-bold">
+            Crea y Emprende 2026
+        </span>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="pt-24 pb-12 px-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- PANEL IZQUIERDO: FORMULARIO -->
+        <section class="lg:col-span-5 bg-shockGray p-6 rounded-3xl border border-white/5 space-y-6">
+            <div>
+                <h2 class="text-xl font-bold flex items-center gap-2 text-shockGreen">
+                    <i data-lucide="sliders" class="w-5 h-5"></i> Personalizar Diseño
+                </h2>
+                <p class="text-xs text-gray-400 mt-1">Escribe los textos sin faltas de ortografía. Se actualizarán en vivo.</p>
+            </div>
+
+            <!-- Editor -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 font-bold mb-1">Nombre de la Marca</label>
+                    <input type="text" id="input-brand" value="SHOCK" oninput="updatePreview()" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-shockGreen">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 font-bold mb-1">Eslogan Principal</label>
+                    <input type="text" id="input-slogan" value="Despierta el rayo" oninput="updatePreview()" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-shockGreen">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 font-bold mb-1">Origen / Ciudad</label>
+                    <input type="text" id="input-location" value="San Ignacio, Cajamarca" oninput="updatePreview()" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-shockGreen">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 font-bold mb-1">Fusión Destacada</label>
+                    <input type="text" id="input-sub" value="Cohesión de Guayusa & Cáscara de Café" oninput="updatePreview()" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-shockGreen">
+                </div>
+
+                <!-- Carga de Código QR -->
+                <div class="bg-zinc-900 p-4 rounded-2xl border border-white/5 space-y-3">
+                    <label class="block text-xs uppercase tracking-wider text-shockAmber font-bold flex items-center gap-2">
+                        <i data-lucide="qr-code" class="w-4 h-4"></i> Subir tu QR Real (24911.png)
+                    </label>
+                    <div class="flex items-center gap-3">
+                        <input type="file" id="qr-upload" accept="image/*" onchange="handleQRUpload(event)" class="hidden">
+                        <label for="qr-upload" class="bg-shockAmber hover:bg-amber-700 text-black font-black text-xs px-4 py-2.5 rounded-xl cursor-pointer transition-all flex items-center gap-1.5">
+                            <i data-lucide="upload" class="w-4 h-4"></i> ELEGIR IMAGEN QR
+                        </label>
+                        <span id="qr-status" class="text-xs text-zinc-500 italic">No se ha subido archivo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="pt-4 border-t border-white/5">
+                <label class="block text-xs uppercase tracking-wider text-gray-400 font-bold mb-3">¿Qué deseas ver/imprimir?</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="switchTab('flyer')" id="btn-tab-flyer" class="py-3 px-4 rounded-xl text-xs font-bold transition-all border bg-shockGreen text-black font-black flex items-center justify-center gap-2">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> VER FLYER
+                    </button>
+                    <button onclick="switchTab('label')" id="btn-tab-label" class="py-3 px-4 rounded-xl text-xs font-bold transition-all border border-white/10 bg-zinc-900 text-gray-300 hover:text-white flex items-center justify-center gap-2">
+                        <i data-lucide="cup-toddy" class="w-4 h-4"></i> VER ETIQUETA
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-white/5">
+                <button onclick="window.print()" class="w-full bg-shockGreen hover:bg-emerald-500 text-black font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                    <i data-lucide="printer" class="w-5 h-5"></i>
+                    IMPRIMIR / GUARDAR EN PDF
+                </button>
+            </div>
+        </section>
+
+        <!-- PANEL DERECHO: VISTA PREVIA -->
+        <section class="lg:col-span-7 flex flex-col items-center justify-center">
+            <div class="w-full max-w-md bg-zinc-950 p-4 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+                <div id="print-target" class="printable-area w-full bg-shockDark border border-white/5 rounded-2xl p-6 relative overflow-hidden text-white flex flex-col justify-between" style="aspect-ratio: 1 / 1.15;">
+                    
+                    <!-- Diseño Flyer -->
+                    <div id="design-flyer" class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 id="preview-flyer-title" class="text-4xl font-black italic tracking-tighter text-white">SHOCK</h1>
+                                <p id="preview-flyer-slogan" class="text-lg font-bold text-shockGreen italic">Despierta el rayo</p>
+                            </div>
+                        </div>
+                        <div class="my-6 space-y-3 bg-zinc-900/60 p-4 rounded-xl border border-white/5">
+                            <p id="preview-flyer-sub" class="text-xs font-bold text-shockAmber uppercase tracking-wider">Cohesión de Guayusa & Cáscara de Café</p>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Bebida bio-energética formulada a través de la economía circular de <span id="preview-flyer-location" class="text-white font-bold">San Ignacio, Cajamarca</span>. Aporta energía limpia, antioxidantes premium y enfoque mental sostenido sin provocar ansiedad.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-6 pt-4 border-t border-white/5">
+                            <div class="w-24 h-24 bg-zinc-950 p-2 rounded-xl border border-shockGreen flex items-center justify-center shrink-0">
+                                <img id="preview-flyer-qr" class="w-full h-full object-contain" src="https://i.postimg.cc/qvs2pB0k/24911.png" alt="QR Code">
+                            </div>
+                            <div class="space-y-1.5">
+                                <span class="text-[10px] font-black uppercase text-shockGreen tracking-widest block">ESCANEAME</span>
+                                <p class="text-[10px] text-gray-400">Analiza el envase en tu teléfono en nuestro visor 3D.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diseño Etiqueta -->
+                    <div id="design-label" class="relative z-10 h-full hidden flex-col justify-between border-2 border-dashed border-shockGreen/40 p-4 rounded-xl">
+                        <div class="text-center">
+                            <h1 id="preview-label-title" class="text-5xl font-black italic text-white tracking-widest">SHOCK</h1>
+                            <p id="preview-label-slogan" class="text-sm font-extrabold text-shockGreen italic uppercase tracking-wider">DESPIERTA EL RAYO</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 my-4 text-left border-y border-white/5 py-3">
+                            <div class="space-y-1">
+                                <span class="text-[9px] font-black text-shockAmber uppercase">Ingredientes Activos</span>
+                                <p class="text-[8px] text-zinc-400 leading-tight">Extracto natural de Guayusa, polifenoles de cáscara de café, estevia pura, taurina activa.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[9px] font-black text-shockAmber uppercase">Origen</span>
+                                <p id="preview-label-location" class="text-[8px] text-zinc-400">San Ignacio, Cajamarca</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="text-[8px] text-zinc-400 leading-tight max-w-[180px]">
+                                <p class="font-bold text-white mb-0.5">Retornable y Circular</p>
+                            </div>
+                            <div class="w-16 h-16 bg-zinc-950 p-1.5 rounded-lg border border-shockAmber flex items-center justify-center shrink-0">
+                                <img id="preview-label-qr" class="w-full h-full object-contain" src="https://i.postimg.cc/qvs2pB0k/24911.png" alt="QR Code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.onload = function() { lucide.createIcons(); };
+        function switchTab(tab) {
+            const viewFlyer = document.getElementById('design-flyer');
+            const viewLabel = document.getElementById('design-label');
+            if (tab === 'flyer') {
+                viewFlyer.classList.remove('hidden'); viewFlyer.classList.add('flex');
+                viewLabel.classList.add('hidden');
+            } else {
+                viewLabel.classList.remove('hidden'); viewLabel.classList.add('flex');
+                viewFlyer.classList.add('hidden');
+            }
+        }
+        function updatePreview() {
+            const brandVal = document.getElementById('input-brand').value;
+            const sloganVal = document.getElementById('input-slogan').value;
+            const locationVal = document.getElementById('input-location').value;
+            const subVal = document.getElementById('input-sub').value;
+            document.getElementById('preview-flyer-title').textContent = brandVal;
+            document.getElementById('preview-flyer-slogan').textContent = sloganVal;
+            document.getElementById('preview-flyer-location').textContent = locationVal;
+            document.getElementById('preview-flyer-sub').textContent = subVal;
+            document.getElementById('preview-label-title').textContent = brandVal;
+            document.getElementById('preview-label-slogan').textContent = sloganVal;
+            document.getElementById('preview-label-location').textContent = locationVal;
+        }
+        function handleQRUpload(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview-flyer-qr').src = e.target.result;
+                document.getElementById('preview-label-qr').src = e.target.result;
+                document.getElementById('qr-status').textContent = "QR cargado";
+            };
+            if (file) reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
